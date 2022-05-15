@@ -1,0 +1,27 @@
+FROM alpine:latest
+
+#COPY fop-2.7-bin.tar.gz .
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && \
+    apk update && apk upgrade && \
+    apk --no-cache add ca-certificates wget tzdata openjdk17-jre && \
+    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk && \
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-bin-2.35-r0.apk && \
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-i18n-2.35-r0.apk && \
+    apk add glibc-bin-2.35-r0.apk glibc-i18n-2.35-r0.apk glibc-2.35-r0.apk && \
+    rm -rfv glibc-bin-2.35-r0.apk glibc-i18n-2.35-r0.apk glibc-2.35-r0.apk && \
+    /usr/glibc-compat/bin/localedef -i zh_CN -c -f UTF-8 zh_CN.UTF-8 && \
+    wget https://dlcdn.apache.org//xmlgraphics/fop/binaries/fop-2.7-bin.tar.gz && \
+    tar -xvzf fop-2.7-bin.tar.gz -C /usr/local && \
+    rm  fop-2.7-bin.tar.gz && \
+    apk del wget
+
+COPY fop/conf/fop.conf /usr/local/fop-2.7/fop/conf/
+COPY fop/fonts/ /usr/local/fop-2.7/fop/fonts/
+
+ENV LANG zh_CN.utf8
+ENV LANGUAGE zh_CN:zh
+ENV LC_ALL zh_CN.utf8
+ENV TZ Asia/Shanghai
+ENV PATH "$PATH:/usr/local/fop-2.7/fop"

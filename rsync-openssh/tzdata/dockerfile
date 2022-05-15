@@ -1,0 +1,13 @@
+FROM alpine:latest
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories \
+    && apk update && apk upgrade \
+    && apk --no-cache add ca-certificates tzdata openssh rsync \
+    && sed -i '/IdentityFile ~\/.ssh\/id_rsa/a\IdentityFile ~\/.ssh\/id_rsa_rsync' /etc/ssh/ssh_config 
+
+COPY .ssh /root/.ssh
+
+ENV TZ Asia/Shanghai
+ENV LANG C.UTF-8
+ENV LANGUAGE C.UTF-8
+ENV LC_ALL C.UTF-8

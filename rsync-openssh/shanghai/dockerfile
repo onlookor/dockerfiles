@@ -1,0 +1,15 @@
+FROM alpine:latest
+
+COPY usr/share/zoneinfo/Asia/Shanghai /usr/share/zoneinfo/Asia/Shanghai
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && \
+    apk update && apk upgrade && \
+    apk --no-cache add ca-certificates openssh rsync && \
+    sed -i '/IdentityFile ~\/.ssh\/id_rsa/a\IdentityFile ~\/.ssh\/id_rsa_rsync' /etc/ssh/ssh_config && \
+    ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+COPY .ssh /root/.ssh
+
+ENV LANG C.UTF-8
+ENV LANGUAGE C.UTF-8
+ENV LC_ALL C.UTF-8
