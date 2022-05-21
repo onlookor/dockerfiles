@@ -1,0 +1,4 @@
+#!/bin/sh
+cd $2;
+zip -rmX $1.zip .
+mv $1.zip $1.epub
