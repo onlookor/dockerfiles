@@ -1,0 +1,10 @@
+FROM hashicorp/vault:latest
+
+COPY ca.crt .
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && \
+    apk update && apk upgrade && \
+    apk --no-cache add gpg gpg-agent && \
+    cat ca.crt >> /etc/ssl/certs/ca-certificates.crt && \
+    rm ca.crt
+
