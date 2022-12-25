@@ -1,0 +1,3 @@
+FROM asciidoctor/docker-asciidoctor
+
+COPY resources /asciidoctor/
